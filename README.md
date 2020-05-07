@@ -10,5 +10,5 @@ Sometimes, when the workload is not much. I love to code things. This C.R.M is f
  - Email notifications
  - Folder name
  - File Name (Download)
- - isRequired in FileType and PhotoType
+ - ~~isRequired in FileType and PhotoType~~
  - Keep old data on form submission error

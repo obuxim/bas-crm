@@ -7,11 +7,13 @@ const {v4 : uuid} = require('uuid')
 const mailer = require('../config/mail')
 const { ensureAuthenticated } = require('../middlewares/auth')
 
+// Get all requests
 router.get('/', ensureAuthenticated, async (req, res) => {
     let requests = await Request.find({})
     return res.render('requests/index', {requests})
 })
 
+// Get single request
 router.get('/show/:id', ensureAuthenticated, async (req, res) => {
     let id = req.params.id
     try{
@@ -25,6 +27,7 @@ router.get('/show/:id', ensureAuthenticated, async (req, res) => {
     }
 })
 
+// Fill up a request
 router.get('/fillup/:url', async (req, res) => {
     const url = req.params.url
     try{
@@ -45,6 +48,7 @@ router.get('/fillup/:url', async (req, res) => {
     }
 })
 
+// Handle fill up request
 router.post('/fillup/:url', async (req, res) => {
     const url = req.params.url
     try{
@@ -109,6 +113,7 @@ router.post('/fillup/:url', async (req, res) => {
     }
 })
 
+// Delete a request
 router.get('/delete/:id', ensureAuthenticated, async (req, res) => {
     try {
         let request = await Request.findById(req.params.id)
@@ -121,10 +126,12 @@ router.get('/delete/:id', ensureAuthenticated, async (req, res) => {
     }
 })
 
+// Create a new request
 router.get('/new', ensureAuthenticated, (req, res) => {
     return res.render('requests/create')
 })
 
+// Handle creating new request
 router.post('/new',[
     ensureAuthenticated,
     check('contact_name', 'Please enter the contact person name').not().isEmpty(),
@@ -159,11 +166,13 @@ router.post('/new',[
             break
         } else {
             let ititle = inputs['photo'+photoIndex]
+            let iisRequired = inputs['photoRequired'+photoIndex] == 'on' ? true : false
             let islug = ititle.toLowerCase().replace(/ +(?= )/g,'').replace(/\s/g , "-")
             let photo = {
                 title: ititle,
                 slug: islug,
-                url: '/requests/photos/noimage.png'
+                url: '/requests/photos/noimage.png',
+                isRequired: iisRequired
             }
             photos.push(photo)
             photoIndex++
@@ -178,10 +187,12 @@ router.post('/new',[
             break
         } else {
             let ititle = inputs['file'+fileIndex]
+            let iisRequired = inputs['fileRequired'+fileIndex] == 'on' ? true : false
             let islug = ititle.toLowerCase().replace(/ +(?= )/g,'').replace(/\s/g , "-")
             let file = {
                 title: ititle,
-                slug: islug
+                slug: islug,
+                isRequired: iisRequired
             }
             files.push(file)
             fileIndex++
