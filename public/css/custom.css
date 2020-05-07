@@ -1,0 +1,18 @@
+.hidden-link {
+    position: fixed;
+    top: -100%;
+    left: -100%;
+}
+.copy-link-button {
+    cursor: pointer;
+    color: #2AA198 !important;
+}
+.tox-menubar, .tox-mbtn, .tox-tbtn, .tox-toolbar__primary, .tox .tox-tbtn svg {
+    background: #657B83 !important;
+    color: #FDF6E3 !important;
+    fill: #FDF6E3 !important;
+}
+.tox-tinymce {
+    border: none !important;
+}
+.tox .tox-edit-area__iframe, .tox .tox-statusbar { background: #A9BDBD !important; }

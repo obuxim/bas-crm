@@ -1,0 +1,43 @@
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"><%= request.property_address.street %>, <%= request.property_address.city %>, <%= request.property_address.state %> - <%= request.property_address.zip %></h4>
+        </div>
+        <div class="card-body">
+            <% let photos = request.photos %>
+            <% let files = request.files %>
+            <%- include('../partials/flash.ejs') %>
+            <form action="/requests/fillup/<%= request.url %>" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h3>Upload Photos</h3>
+                        <% for(i=0; i<photos.length; i++) { %>
+                            <div class="form-group">
+                                <label for="photo<%= i %>"><%= photos[i].title %></label>
+                                <input type="file" name="<%= photos[i].slug %>" id="photo<%= i %>" class="form-control-file" <%if(photos[i].isRequired){%>required<%}%>>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <h3>Upload Files</h3>
+                        <% for(i=0; i<files.length; i++) { %>
+                            <div class="form-group">
+                                <label for="file<%= i %>"><%= files[i].title %></label>
+                                <input type="file" name="<%= files[i].slug %>" id="file<%= i %>" class="form-control-file" <%if(files[i].isRequired){%>required<%}%> >
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="submission_note"><strong>Send a message</strong></label>
+                    <textarea id="submission_note" name="submission_note" class="form-control">
+
+                    </textarea>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn shadow rounded bg-gradient-success w-50 py-2 text-light">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+<% let bulk_download = false %>
+
+<div class="container">
+    <div class="card my-3">
+        <div class="card-header">
+            <h4 class="card-title">Overview</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <table class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th><h3>Contact Information</h3><hr></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Contact Name:</strong></td>
+                                <td><%= request.contact.name %></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contact Email:</strong></td>
+                                <td><%= request.contact.email %></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Contact Phone/Mobile:</strong></td>
+                                <td><%= request.contact.mobile %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-block d-md-none col-12 my-3"><hr></div>
+                <div class="col-12 col-md-6">
+                    <table class="table-responsive">
+                        <thead>
+                            <tr>
+                                <th><h3>Property Information</h3><hr></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>Property Address (Street):</strong></td>
+                            <td><%= request.property_address.street %></td>
+                        </tr>
+                        <% if(request.property_address.street1 != '') { %>
+                            <tr>
+                                <td><strong>Property Address (Street 1):</strong></td>
+                                <td><%= request.property_address.street1 %></td>
+                            </tr>
+                        <% } %>
+                        <tr>
+                            <td><strong>City</strong></td>
+                            <td><%= request.property_address.city %></td>
+                        </tr>
+                        <tr>
+                            <td><strong>State</strong></td>
+                            <td><%= request.property_address.state %></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ZIP</strong></td>
+                            <td><%= request.property_address.zip %></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4 class="card-title">Photos</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <% request.photos.forEach(function (photo) { %>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card m-1">
+                            <img src="<%= app_url+photo.url %>" alt="<%= photo.title %>" class="card-img-top"/>
+                            <div class="card-body">
+                                <p class="card-title"><%= photo.title %></p>
+                                <% if(photo.url != '/img/noimage.png') { %>
+                                    <% bulk_download = true %>
+                                    <a class="btn btn-primary bg-gradient-primary" href="<%= app_url+photo.url %>" target="_blank">Download</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4 class="card-title">Files</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <% request.files.forEach(function (file) { %>
+                    <div class="col-12">
+                        <div class="card m-1">
+                            <div class="card-body d-flex align-items-center justify-content-between">
+                                <p class="card-title m-0"><%= file.title %></p>
+                                <% if(typeof file.url != "undefined"){ %>
+                                    <a class="btn btn-primary bg-gradient-primary single" href="<%= app_url+file.url %>" target="_blank">Download</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+    <% if(bulk_download) { %>
+        <div class="card my-3">
+        <div class="card-header">
+            <h4 class="card-title">Download all as ZIP</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary bg-gradient-primary" href="<%= app_url + 'requests/download/' + request.id %>" target="_blank">Download All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+    <div class="card my-3">
+        <div class="card-header">
+            <h4 class="card-title">Note to Contact</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <%- request.contact.note %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% if(request.submission_note != '' && typeof request.submission_note != 'undefined') { %>
+        <div class="card my-3">
+            <div class="card-header">
+                <h4 class="card-title">Note from Contact</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%- request.submission_note %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>

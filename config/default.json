@@ -1,0 +1,6 @@
+{
+  "app_url_instruction": "Please enter with protocol and trailing slash! example: https://domain.extension/",
+  "app_url": "https://crm.bostonappraisal.com/",
+  "mongoURI_instruction": "Please enter the MongoDB connection string!",
+  "mongoURI": "mongodb+srv://octoriz:2y0vfD1H2tZBCgO0@freecluster-ujfix.mongodb.net/bas-crm?retryWrites=true&w=majority"
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CRM | BAS 2.0</title>
+    <meta name="description" content="CRM - Client Relationship Management module of the Appraisal Management System of Boston Appraisal Services">
+    <meta keywords="Boston, Appraisal, Services, Client, Relationship, Management, System, Octoriz, Private, Limited, Zubair, Hasan, Zubo, Lazy, King, Obuxim">
+    <meta name="author" content="Zubair Hasan">
+    <meta name="copyright" content="Octoriz Private Limited">
+    <!-- Including Bootstrap/Bootswatch CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <!-- Including FontAwesome -->
+    <script src="https://kit.fontawesome.com/1c781ab882.js" crossorigin="anonymous"></script>
+    <!-- Including TinyMCE CDN -->
+    <script src="https://cdn.tiny.cloud/1/yeokn52ufa06oyd9wsmzk6xzi59ptuj9p0y42eyyvwjsh1k3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- Including VueJS Development Version -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Including Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark shadow">
+    <div class="container">
+        <a class="navbar-brand" href="/">BAS CRM</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mobileMenu">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/requests/new">Add Request</a></li>
+                <li class="nav-item"><a class="nav-link" href="/requests">Active Requests</a></li>
+                <% if(typeof user != 'undefined') { %>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+<%- body %>
+<script src="/js/jquery.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/custom.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<div class="container my-3">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Create New Request</h3>
+        </div>
+        <div class="card-body">
+            <%- include('../partials/flash') %>
+            <% if(previousInputs.length > 0) { %>
+                <% let lastInputs = {} %>
+                <% previousInputs.forEach(function(input){ %>
+                    <% lastInputs = input %>
+                <% }) %>
+                <form action="/requests/new" method="POST">
+                    <div class="row">
+                        <div class="col-12 col-md-8">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="name">Contact Name</label>
+                                    <input type="text" id="name" name="contact_name" class="form-control" value="<%= lastInputs.contact_name %>">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="street">Street Address</label>
+                                    <input type="text" id="street" name="street" class="form-control" value="<%= lastInputs.street %>">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="street1">Street Address (Line 2)</label>
+                                    <input type="text" id="street1" name="street1" class="form-control" value="<%= lastInputs.street1 %>">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" name="city" class="form-control" value="<%= lastInputs.city %>">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="state">State</label>
+                                    <input type="text" id="state" name="state" class="form-control" value="<%= lastInputs.state %>">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="zip">ZIP Code</label>
+                                    <input type="text" id="zip" name="zip" class="form-control" value="<%= lastInputs.zip %>">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="email">Contact Email</label>
+                                    <input type="email" id="email" name="contact_email" class="form-control" value="<%= lastInputs.contact_email %>">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="phone">Contact Phone</label>
+                                    <input type="text" id="phone" name="contact_phone" class="form-control" value="<%= lastInputs.contact_phone %>">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="notes">Note to Contact</label>
+                                    <textarea id="notes" name="contact_note" class="form-control" value="">
+                                    <%- lastInputs.contact_note %>
+                                </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div id="requested-photos">
+                                <label class="font-weight-bolder">Requested Photo Types - Required</label>
+                                <div class="form-group row" v-for="(requested_photo, index) in requested_photos" :key="index">
+                                    <div class="col">
+                                        <input type="text" class="form-control text-light" v-bind:value="requested_photo" v-bind:name="'photo'+index" readonly>
+                                    </div>
+                                    <div class="col-auto d-flex justify-content-center align-items-center">
+                                        <input type="checkbox" class="form-check-inline" v-bind:name="'photoRequired'+index">
+                                    </div>
+                                    <div class="col-auto d-flex justify-content-center align-items-center">
+                                        <i class="fas fa-times fa-2x" v-on:click="remove_requested_photo(index)"></i>
+                                    </div>
+                                </div>
+                                <label for="add_requested_photo">New Photo Type</label>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="add_requested_photo" v-model="new_requested_photo">
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-2x fa-plus" v-on:click="add_requested_photo()"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="requested-files">
+                                <label class="font-weight-bolder">Requested File Types - Required</label>
+                                <div class="form-group row" v-for="(requested_file, index) in requested_files" :key="index">
+                                    <div class="col">
+                                        <input type="text" class="form-control text-light" v-bind:value="requested_file" v-bind:name="'file'+index" readonly>
+                                    </div>
+                                    <div class="col-auto d-flex justify-content-center align-items-center">
+                                        <input type="checkbox" class="form-check-inline" v-bind:name="'fileRequired'+index">
+                                    </div>
+                                    <div class="col-auto d-flex justify-content-center align-items-center">
+                                        <i class="fas fa-times fa-2x" v-on:click="remove_requested_file(index)"></i>
+                                    </div>
+                                </div>
+                                <br>
+                                <label for="add_requested_photo">New File Type</label>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="add_requested_file" v-model="new_requested_file">
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-2x fa-plus" v-on:click="add_requested_file()"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label>Link Expiration after</label>
+                                </div>
+                                <div class="col">
+                                    <small><label>Days</label></small>
+                                    <input type="text" name="expiration_day" value="0" class="form-control" value="<%= lastInputs.expiration_day %>">
+                                </div>
+                                <div class="col">
+                                    <small><label>Hours</label></small>
+                                    <input type="text" name="expiration_hour" value="0" class="form-control" value="<%= lastInputs.expiration_hour %>">
+                                </div>
+                                <div class="col">
+                                    <small><label>Minutes</label></small>
+                                    <input type="text" name="expiration_minute" value="0" class="form-control" value="<%= lastInputs.expiration_minute %>">
+                                </div>
+                                <div class="col-12">
+                                    <small class="form-text text-muted">Enter 0 if you don't want to expire a link.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-12 text-center d-flex justify-content-around align-items-center mt-3">
+                            <button type="submit" class="btn shadow bg-gradient-success w-50 text-light">Send Request</button>
+                        </div>
+                    </div>
+                </form>
+            <% } else { %>
+                <form action="/requests/new" method="POST">
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="name">Contact Name</label>
+                                <input type="text" id="name" name="contact_name" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="street">Street Address</label>
+                                <input type="text" id="street" name="street" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="street1">Street Address (Line 2)</label>
+                                <input type="text" id="street1" name="street1" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-4">
+                                <label for="zip">ZIP Code</label>
+                                <input type="text" id="zip" name="zip" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="email">Contact Email</label>
+                                <input type="email" id="email" name="contact_email" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="phone">Contact Phone</label>
+                                <input type="text" id="phone" name="contact_phone" class="form-control" value="">
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="notes">Note to Contact</label>
+                                <textarea id="notes" name="contact_note" class="form-control" value="">
+                                    We are <strong>Boston Appraisal Services</strong>, and we are the appraiser assigned to complete the appraisal on your property. To help in that process, We are requesting that you provide several photos since we are not conducting an interior inspection of the property. We have provided a list of requested photos. If there are additional rooms (bedrooms, bathrooms, office, utility room, etc.) that are not listed in the requested photos, items of note, or anything else, please provide additional photos of those rooms/items. If any of the photos requested do not apply, that is fine, please just type a comment in the description field for that photo (see instructions for further detail).
+                                    <br><br>
+                                    Thank you for your help. If you have any questions, please don't hesitate to contact us.
+                                    <br><br>
+                                    <strong>Boston Appraisal Services</strong>
+                                    <br>
+                                    orders@bostonappraisal.com
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div id="requested-photos">
+                            <label class="font-weight-bolder">Requested Photo Types - Required</label>
+                            <div class="form-group row" v-for="(requested_photo, index) in requested_photos" :key="index">
+                                <div class="col">
+                                    <input type="text" class="form-control text-light" v-bind:value="requested_photo" v-bind:name="'photo'+index" readonly>
+                                </div>
+                                <div class="col-auto d-flex justify-content-center align-items-center">
+                                    <input type="checkbox" class="form-check-inline" v-bind:name="'photoRequired'+index">
+                                </div>
+                                <div class="col-auto d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-times fa-2x" v-on:click="remove_requested_photo(index)"></i>
+                                </div>
+                            </div>
+                            <label for="add_requested_photo">New Photo Type</label>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="add_requested_photo" v-model="new_requested_photo">
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-2x fa-plus" v-on:click="add_requested_photo()"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="requested-files">
+                            <label class="font-weight-bolder">Requested File Types - Required</label>
+                            <div class="form-group row" v-for="(requested_file, index) in requested_files" :key="index">
+                                <div class="col">
+                                    <input type="text" class="form-control text-light" v-bind:value="requested_file" v-bind:name="'file'+index" readonly>
+                                </div>
+                                <div class="col-auto d-flex justify-content-center align-items-center">
+                                    <input type="checkbox" class="form-check-inline" v-bind:name="'fileRequired'+index">
+                                </div>
+                                <div class="col-auto d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-times fa-2x" v-on:click="remove_requested_file(index)"></i>
+                                </div>
+                            </div>
+                            <br>
+                            <label for="add_requested_photo">New File Type</label>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="add_requested_file" v-model="new_requested_file">
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-2x fa-plus" v-on:click="add_requested_file()"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Link Expiration after</label>
+                            </div>
+                            <div class="col">
+                                <small><label>Days</label></small>
+                                <input type="text" name="expiration_day" value="0" class="form-control">
+                            </div>
+                            <div class="col">
+                                <small><label>Hours</label></small>
+                                <input type="text" name="expiration_hour" value="0" class="form-control">
+                            </div>
+                            <div class="col">
+                                <small><label>Minutes</label></small>
+                                <input type="text" name="expiration_minute" value="0" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <small class="form-text text-muted">Enter 0 if you don't want to expire a link.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-12 text-center d-flex justify-content-around align-items-center mt-3">
+                        <button type="submit" class="btn shadow bg-gradient-success w-50 text-light">Send Request</button>
+                    </div>
+                </div>
+            </form>
+            <% } %>
+        </div>
+    </div>
+</div>
+<script src="/js/vue.js"></script>
