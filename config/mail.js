@@ -1,13 +1,14 @@
 const nodemailer = require('nodemailer')
+const config = require('config')
+
+const email = config.get('gmail_email')
+const password = config.get('gmail_password')
 
 let mailer = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    service: 'gmail',
     auth: {
-        type: 'OAuth2',
-        clientId: '441595692051-uv0muvoiqub05rvl0l7a4vfta92hhbul.apps.googleusercontent.com',
-        clientSecret: '3VxWYtpw3uLLXCjM5JVRxtz4'
+        user: email,
+        pass: password
     }
 });
 

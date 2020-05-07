@@ -4,14 +4,15 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const Request = require('../models/Request')
 const {v4 : uuid} = require('uuid')
-const nodemailer = require('nodemailer')
+const mailer = require('../config/mail')
+const { ensureAuthenticated } = require('../middlewares/auth')
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuthenticated, async (req, res) => {
     let requests = await Request.find({})
     return res.render('requests/index', {requests})
 })
 
-router.get('/show/:id', async (req, res) => {
+router.get('/show/:id', ensureAuthenticated, async (req, res) => {
     let id = req.params.id
     try{
         let request = await Request.findById(id)
@@ -108,7 +109,7 @@ router.post('/fillup/:url', async (req, res) => {
     }
 })
 
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/:id', ensureAuthenticated, async (req, res) => {
     try {
         let request = await Request.findById(req.params.id)
         await request.delete()
@@ -120,11 +121,12 @@ router.get('/delete/:id', async (req, res) => {
     }
 })
 
-router.get('/new', (req, res) => {
+router.get('/new', ensureAuthenticated, (req, res) => {
     return res.render('requests/create')
 })
 
 router.post('/new',[
+    ensureAuthenticated,
     check('contact_name', 'Please enter the contact person name').not().isEmpty(),
     check('street', 'Please enter the property street address').not().isEmpty(),
     check('city', 'Please enter the property city').not().isEmpty(),
@@ -213,23 +215,7 @@ router.post('/new',[
         await request.save()
         req.flash('success', 'Successfully Created!')
         // res.redirect(`/requests/${request.id}`)
-        async function main() {
-            let mailer = nodemailer.createTransport({
-                host: 'mail.octoriz.com',
-                port: 465,
-                secure: true,
-                auth: {
-                    user: "zubo@octoriz.com",
-                    pass: "~!@#Zmh4x0r18"
-                }
-            });
-            mailer.verify(function(error, success){
-                if(error){
-                    console.error(error)
-                } else if (success) {
-                    console.log(success)
-                }
-            })
+        try {
             let mail = await mailer.sendMail({
                 from: '"Boston Appraisal Services" <orders@boston-appraisal.com>',
                 to: request.contact.email,
@@ -237,8 +223,9 @@ router.post('/new',[
                 html: request.contact.note
             })
             console.log(mail.messageId)
+        } catch (e) {
+            console.error('Error sending email: ', e)
         }
-        main().catch(console.error)
         return res.redirect('/requests')
     } catch (error) {
         req.flash('error', error.message)
