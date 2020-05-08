@@ -59,7 +59,7 @@ router.post('/fillup/:url', async (req, res) => {
         if(request.valid){
             let photos = []
             let files = []
-            let {subimission_note} = req.body
+            let {submission_note} = req.body
 
             // Get file name.
             let dirFromStreet = request.property_address.street.toLowerCase().replace(/ +(?= )/g,'').replace(/,/g, "").replace(/\s/g , "-")
@@ -128,7 +128,7 @@ router.post('/fillup/:url', async (req, res) => {
             request.photos = photos
             request.files = files
             request.status = 'Completed'
-            request.submission_note = subimission_note
+            request.submission_note = submission_note
             await request.save()
             ejs.renderFile(__dirname+'/../views/email/filled.ejs', {url: config.get('app_url')+'requests/show/'+request.id, note: request.submission_note}, async function(err, data){
                 if (err){
