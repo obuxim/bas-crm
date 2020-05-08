@@ -189,6 +189,8 @@ router.post('/new',[
     let errors = validationResult(req)
     if(!errors.isEmpty()){
         req.flash('errors', errors.array())
+        let previousInputs = req.body
+        req.flash('previousInputs', previousInputs)
         return res.redirect('/requests/new')
     }
     const {contact_name, street, street1, city, state, zip, contact_email, contact_phone, contact_note, expiration_day, expiration_hour, expiration_minute} = req.body

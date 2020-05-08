@@ -11,4 +11,4 @@ Sometimes, when the workload is not much. I love to code things. This C.R.M is f
  - ~~Folder name~~
  - ~~File Name (Download)~~
  - ~~isRequired in FileType and PhotoType~~
- - Keep old data on form submission error
+ - ~~Keep old data on form submission error~~
