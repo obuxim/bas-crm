@@ -7,6 +7,8 @@ const {v4 : uuid} = require('uuid')
 const mailer = require('../config/mail')
 const { ensureAuthenticated } = require('../middlewares/auth')
 const admZIP = require('adm-zip')
+const config = require('config')
+const ejs = require('ejs')
 
 // Get all requests
 router.get('/', ensureAuthenticated, async (req, res) => {
@@ -128,6 +130,23 @@ router.post('/fillup/:url', async (req, res) => {
             request.status = 'Completed'
             request.submission_note = subimission_note
             await request.save()
+            ejs.renderFile(__dirname+'/../views/email/filled.ejs', {url: config.get('app_url')+'requests/show/'+request.id, note: request.submission_note}, async function(err, data){
+                if (err){
+                    console.error(err)
+                } else{
+                    try {
+                        let mail = await mailer.sendMail({
+                            from: '"Boston Appraisal Services" <orders@boston-appraisal.com>',
+                            to: 'orders@boston-appraisal.com',
+                            subject: "New request submitted - "+request.property_address.street+", "+request.property_address.city+", "+request.property_address.zip+" - "+request.property_address.zip,
+                            html: data
+                        })
+                        console.log(mail.messageId)
+                    } catch (e) {
+                        console.error('Error sending email: ', e)
+                    }
+                }
+            });
             return res.render('requests/thanks')
         } else {
             return res.render('requests/expired')
@@ -250,17 +269,23 @@ router.post('/new',[
         await request.save()
         req.flash('success', 'Successfully Created!')
         // res.redirect(`/requests/${request.id}`)
-        try {
-            let mail = await mailer.sendMail({
-                from: '"Boston Appraisal Services" <orders@boston-appraisal.com>',
-                to: request.contact.email,
-                subject: "Please complete your appraisal! - Boston Appraisal Services",
-                html: request.contact.note
-            })
-            console.log(mail.messageId)
-        } catch (e) {
-            console.error('Error sending email: ', e)
-        }
+        ejs.renderFile(__dirname+'/../views/email/requested.ejs', {url: config.get('app_url')+'requests/fillup/'+request.url, note: request.contact.note}, async function(err, data){
+            if(err){
+                console.error(err)
+            }else{
+                try {
+                    let mail = await mailer.sendMail({
+                        from: '"Boston Appraisal Services" <orders@boston-appraisal.com>',
+                        to: request.contact.email,
+                        subject: "Complete appraisal of - "+request.property_address.street+", "+request.property_address.city+", "+request.property_address.zip+" - "+request.property_address.zip,
+                        html: data
+                    })
+                    console.log(mail.messageId)
+                } catch (e) {
+                    console.error('Error sending email: ', e)
+                }
+            }
+        });
         return res.redirect('/requests')
     } catch (error) {
         req.flash('error', error.message)
