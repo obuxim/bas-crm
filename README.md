@@ -8,7 +8,7 @@ Sometimes, when the workload is not much. I love to code things. This C.R.M is f
 > Todos:
  - ~~Configure Gmail Service with Nodemailer~~
  - Email notifications
- - Folder name
- - File Name (Download)
+ - ~~Folder name~~
+ - ~~File Name (Download)~~
  - ~~isRequired in FileType and PhotoType~~
  - Keep old data on form submission error
